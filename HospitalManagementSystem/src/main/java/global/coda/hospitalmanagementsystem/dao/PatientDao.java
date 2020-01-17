@@ -79,6 +79,7 @@ public class PatientDao {
       resultSet = preStatement.executeQuery();
       patient = getPatientDetailsFromResultSet(resultSet);
     } catch (SQLException exception) {
+      //FIX : THROW CUSTOM EXCEPTION AND CATCH IT IN HELPER. THROW SYSTEM OR BUSINESS EXCEPTION IN HELPER
       LOGGER.debug(exception.toString());
     }
     return patient;

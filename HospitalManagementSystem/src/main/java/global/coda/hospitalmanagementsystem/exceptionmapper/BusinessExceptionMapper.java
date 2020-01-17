@@ -20,9 +20,11 @@ public class BusinessExceptionMapper implements ExceptionMapper<BusinessExceptio
    */
   @Override
   public Response toResponse(BusinessException exception) {
+    //FIX : ADD ERROR LOG HERE
     // final JsonArray jsonArray = new JsonArray();
     JSONObject jsonPatient = new JSONObject();
     // jsonPatient.put("Status Code", "400");
+    //FIX : USE EXCEPTION MESSAGE
     jsonPatient.put("Message", exception.toString());
     // jsonArray.add((JsonValue) jsonPatient);
     return Response.status(400).entity(jsonPatient.toString()).build();

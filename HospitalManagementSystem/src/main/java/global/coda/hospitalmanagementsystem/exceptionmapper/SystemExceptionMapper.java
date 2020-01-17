@@ -26,6 +26,7 @@ public class SystemExceptionMapper implements ExceptionMapper<SystemException> {
     final JsonArray jsonArray = new JsonArray();
     JSONObject jsonPatient = new JSONObject();
     // jsonPatient.put("Status Code", "500");
+    //FIX : USE CONSTANTS
     jsonPatient.put("Message", "Something went wrong!");
     // jsonArray.add((JsonValue) jsonPatient);
     return Response.status(400).entity(jsonPatient.toString()).build();

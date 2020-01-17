@@ -56,7 +56,9 @@ public class PatientHelper {
   public Patient readPatient(int userId) throws InvalidUserIdException {
     try {
       patient = patientDao.readPatient(userId);
+      //FIX : CATCH GEENRIC EXCEPTION
     } catch (SQLException e) {
+      //FIX : USE MESSAGE
       throw new InvalidUserIdException();
     }
     return patient;

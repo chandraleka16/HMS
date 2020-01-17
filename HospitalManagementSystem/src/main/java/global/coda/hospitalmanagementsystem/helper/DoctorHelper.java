@@ -3,6 +3,7 @@ package global.coda.hospitalmanagementsystem.helper;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -127,7 +128,7 @@ public class DoctorHelper {
     try {
       patientList = doctorDao.listAllPatientsUnderDoctor(doctorId);
       if (patientList != null && !patientList.isEmpty()) {
-        System.out.println("helper  "+patientList);
+        System.out.println("helper  " + patientList);
         return patientList;
       } else {
         throw new SystemException();
@@ -138,9 +139,20 @@ public class DoctorHelper {
 
   }
 
-  public List<Patient> listAllPatientsUnderAllDoctors() {
-    // TODO Auto-generated method stub
-    return null;
+  /**
+   * method to list all patients under all doctors.
+   *
+   * @return doctor map object
+   * @throws SystemException when something is wrong
+   */
+  public Map<Integer, Doctor> listAllPatientsUnderAllDoctors() throws SystemException {
+    Map<Integer, Doctor> doctorMap = doctorDao.readAllPatientsUnderAllDoctors();
+    if (doctorMap != null && !doctorMap.isEmpty()) {
+      return doctorMap;
+    } else {
+      throw new SystemException();
+    }
+
   }
 
 }

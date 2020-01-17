@@ -2,6 +2,7 @@ package global.coda.hospitalmanagementsystem.api;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -138,9 +139,8 @@ public class DoctorApi {
   @Path("/listAllPatients")
   @Produces(MediaType.APPLICATION_JSON)
   public Response listAllPatientsUnderDoctors() throws BusinessException, SystemException {
-    List<Patient> patientList = doctorDeligate.listAllPatientsUnderDoctors();
-    return Response.status(200).entity(patientList).build();
-
+    Map<Integer, Doctor> doctorMap = doctorDeligate.listAllPatientsUnderDoctors();
+    return Response.status(200).entity(doctorMap).build();
   }
 
 }

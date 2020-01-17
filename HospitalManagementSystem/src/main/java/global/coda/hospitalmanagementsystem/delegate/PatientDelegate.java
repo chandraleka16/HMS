@@ -50,6 +50,7 @@ public class PatientDelegate {
     try {
       patient = patientHelper.readPatient(userId);
 
+      //FIX : CATCH SYSTEM AND BUSINESS EXCEPTION ONLY
     } catch (InvalidUserIdException e) {
       throw new InvalidUserIdException();
     }

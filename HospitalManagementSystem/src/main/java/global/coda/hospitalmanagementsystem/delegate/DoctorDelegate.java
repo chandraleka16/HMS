@@ -2,7 +2,9 @@ package global.coda.hospitalmanagementsystem.delegate;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,8 +71,7 @@ public class DoctorDelegate {
    * @throws SQLException
    * @throws BusinessException
    */
-  public int updateDoctor(Doctor doctorData, int userId)
-      throws BusinessException, SQLException {
+  public int updateDoctor(Doctor doctorData, int userId) throws BusinessException, SQLException {
     return doctorHelper.updateDoctor(doctorData, userId);
 
   }
@@ -89,8 +90,7 @@ public class DoctorDelegate {
 
   }
 
-  public List<Patient> listAllPatients(int doctorId)
-      throws SystemException, BusinessException {
+  public List<Patient> listAllPatients(int doctorId) throws SystemException, BusinessException {
     try {
       List<Patient> patientList = new ArrayList<Patient>();
       patientList = doctorHelper.listAllPatients(doctorId);
@@ -102,11 +102,11 @@ public class DoctorDelegate {
 
   }
 
-  public List<Patient> listAllPatientsUnderDoctors() throws SystemException {
+  public Map<Integer, Doctor> listAllPatientsUnderDoctors() throws SystemException {
     try {
-      List<Patient> patientList = new ArrayList<Patient>();
-      patientList = doctorHelper.listAllPatientsUnderAllDoctors();
-      return patientList;
+      Map<Integer, Doctor> doctorMap = new HashMap<Integer, Doctor>();
+      doctorMap = doctorHelper.listAllPatientsUnderAllDoctors();
+      return doctorMap;
     } catch (Exception e) {
       throw new SystemException();
     }

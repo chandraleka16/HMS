@@ -37,13 +37,13 @@ public class PatientApi {
    * Method to create a patient details into db.
    *
    * @param patientData to insert
-   * @return response to the client
-   * @throws InvalidUserIdException
+   * @return Response bto the client
    */
   @POST
   @Path("/createPatient")
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
+  // FIX : THROW SYSTEM EXCEPTION
   public Response createPatientDetails(Patient patientData)
       throws BusinessException, SQLException {
 
@@ -63,12 +63,15 @@ public class PatientApi {
   @Produces(MediaType.APPLICATION_JSON)
   public Response readpatientDetails(@PathParam("patientId") int patientId)
       throws InvalidUserIdException {
+    // FIX : USE TRACE ENTRY AND TRACE EXIT LOGGERS
     JsonArray jsonArray = new JsonArray();
     JSONObject jsonPatient = new JSONObject();
+    // FIX : USE STATIC
     patient = patientDeligate.readPatient(patientId);
     // jsonPatient.put("Status Code", "200");
     jsonPatient.put("Message", patient);
     // jsonArray.put(jsonPatient);
+    // FIX : USE BEAN INSTEAD OF STRING
     return Response.status(200).entity(jsonPatient.toString(2)).build();
 
   }

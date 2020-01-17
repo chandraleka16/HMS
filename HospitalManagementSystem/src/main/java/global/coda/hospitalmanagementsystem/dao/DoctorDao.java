@@ -5,7 +5,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 import org.slf4j.Logger;
@@ -53,13 +55,14 @@ public class DoctorDao {
       preStatement.setInt(ApplicationConstant.NUMBER3, doctorData.getDoctorExperience());
       preStatement.executeUpdate();
       resultSet = preStatement.getGeneratedKeys();
-      if (resultSet.next()) {
+      if (resultSet != null && resultSet.next()) {
         doctorId = resultSet.getInt(ApplicationConstant.NUMBER1);
         connection.commit();
       }
     } catch (SQLException e) {
       connection.rollback();
-      LOGGER.error(e.getMessage());
+      LOGGER.info(e.getMessage());
+      throw new SQLException(e);
 
     }
     return doctorId;
@@ -166,8 +169,7 @@ public class DoctorDao {
       result = preStatement.executeUpdate();
       // patient = getPatientDetailsFromResultSet(resultSet);
     } catch (SQLException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+      LOGGER.debug(e.toString());
     }
 
     return result;
@@ -179,8 +181,9 @@ public class DoctorDao {
    *
    * @param doctorId to list patients
    * @return patient id
+   * @throws SQLException
    */
-  public List<Patient> listAllPatientsUnderDoctor(int doctorId) {
+  public List<Patient> listAllPatientsUnderDoctor(int doctorId) throws SQLException {
     List<Patient> patientList = null;
     int patientId = 0;
     try {
@@ -198,7 +201,8 @@ public class DoctorDao {
       // }
       // }
     } catch (SQLException e) {
-      LOGGER.debug(e.getMessage());
+      throw new SQLException(e);
+      // LOGGER.info(e.getMessage());
 
     }
     return patientList;
@@ -236,4 +240,52 @@ public class DoctorDao {
     return patientList;
   }
 
+  public Map<Integer, Doctor> readAllPatientsUnderAllDoctors() {
+    Map<Integer, Doctor> doctorMap = new HashMap<Integer, Doctor>();
+    int patientId = 0;
+    try {
+      connection = DaoConnection.getConnection();
+      preStatement = connection
+          .prepareStatement(DAO_MESSAGE_BUNDLE.getString(ApplicationDaoConstant.HMSPUD002));
+      resultSet = preStatement.executeQuery();
+      System.out.println(resultSet.toString());
+      doctorMap = getDoctorListFromResultSet(resultSet);
+    } catch (SQLException e) {
+      LOGGER.debug(e.getMessage());
+    }
+    return doctorMap;
+  }
+
+  private Map<Integer, Doctor> getDoctorListFromResultSet(ResultSet resultSet)
+      throws SQLException {
+    Map<Integer, Doctor> doctorMap = new HashMap<Integer, Doctor>();
+    try {
+      connection = DaoConnection.getConnection();
+
+      while (resultSet != null && resultSet.next()) {
+        List<Patient> patientList = new ArrayList<Patient>();
+        Patient tempPatient = new Patient();
+        Doctor tempDoctor = new Doctor();
+        tempPatient.setUserId(resultSet.getInt("pk_user_id"));
+        tempPatient.setUserName(resultSet.getString("user_name"));
+        tempPatient.setUserPassword(resultSet.getString("user_password"));
+        tempPatient.setUserAge(resultSet.getInt("user_age"));
+        tempPatient.setUserGender(resultSet.getString("user_gender"));
+        tempPatient.setUserMobileNumber(resultSet.getString("user_mobile_number"));
+        tempPatient.setUserEmailId(resultSet.getString("user_email_id"));
+        tempPatient.setUserAddressLine1(resultSet.getString("user_address_line1"));
+        tempPatient.setUserAddressLine2(resultSet.getString("user_address_line2"));
+        tempPatient.setUserAddressLine3(resultSet.getString("user_address_line3"));
+        tempPatient.setPatientDisease(resultSet.getString("patient_disease"));
+        tempDoctor.setUserId(resultSet.getInt("fk_doctor_id"));
+        patientList.add(tempPatient);
+        tempDoctor.setPatientList(patientList);
+        doctorMap.put(tempDoctor.getUserId(), tempDoctor);
+      }
+    } catch (SQLException e) {
+      LOGGER.info(e.getMessage());
+      throw new SQLException(e);
+    }
+    return doctorMap;
+  }
 }
